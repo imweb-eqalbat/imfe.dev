@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  app:
+    image: nginx
+    volumes:
+      - ../../.docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./src:/usr/share/nginx/html
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == ${HOSTNAME}
+      labels:
+        - traefik.enable=true
+        - traefik.http.routers.imshop-202204__${PROJECT_NAME}.entrypoints=websecure
+        - traefik.http.routers.imshop-202204__${PROJECT_NAME}.rule=Host(`${DOMAIN}`)
+        - traefik.http.routers.imshop-202204__${PROJECT_NAME}.tls.certresolver=leresolver
+        - traefik.http.services.imshop-202204__${PROJECT_NAME}.loadbalancer.server.port=80
+
+networks:
+  default:
+    external:
+      name: proxy-main
