@@ -16,6 +16,24 @@ services:
         - traefik.http.routers.imshop-202204__${PROJECT_NAME}.rule=Host(`${DOMAIN}`)
         - traefik.http.routers.imshop-202204__${PROJECT_NAME}.tls.certresolver=leresolver
         - traefik.http.services.imshop-202204__${PROJECT_NAME}.loadbalancer.server.port=80
+  traefik-forward-auth:
+    image: thomseddon/traefik-forward-auth:latest
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      - PROVIDERS_GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID} # REDACTED
+      - PROVIDERS_GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_ID} # REDACTED
+      - SECRET=${OAUTH_SECRET}
+      - INSECURE_COOKIE=false
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == ${HOSTNAME}
+      labels:
+        - traefik.enable=true
+        - traefik.http.middlewares.traefik-forward-auth.forwardauth.address=http://traefik-forward-auth:4181
+        - traefik.http.middlewares.traefik-forward-auth.forwardauth.authResponseHeaders=X-Forwarded-User
+        - traefik.http.services.traefik-forward-auth.loadbalancer.server.port=4181
 
 networks:
   default:
