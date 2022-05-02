@@ -22,7 +22,7 @@ services:
         - traefik.http.routers.imshop-202204__${PROJECT_NAME}.rule=Host(`weblate.${DOMAIN}`)
         - traefik.http.routers.imshop-202204__${PROJECT_NAME}.tls.certresolver=leresolver
         - traefik.http.services.imshop-202204__${PROJECT_NAME}.loadbalancer.server.port=8080
-        - traefik.http.routers.imshop-202204__${PROJECT_NAME}.middlewares=imshop-auth@file
+        - traefik.http.routers.imshop-202204__${PROJECT_NAME}.middlewares=traefik-forward-auth
   database:
     image: postgres:14-alpine
     env_file:
