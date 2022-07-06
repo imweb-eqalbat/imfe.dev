@@ -1,11 +1,3 @@
-# OPS
+## private vpc
 
-## WEBLATE
-
-- [WeblateOrg/docker-compose: Docker compose for Weblate](https://github.com/WeblateOrg/docker-compose)
-
-
-## Goal
-
-- [ ] [WeblateOrg/weblate: Web based localization tool with tight version control integration.](https://github.com/WeblateOrg/weblate)
-- [ ] [mozilla/pontoon: Mozilla's Localization Platform](https://github.com/mozilla/pontoon/)
+hyeon server traefik 사용 보안을 회사 계정으로 설정
