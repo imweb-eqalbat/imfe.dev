@@ -3,19 +3,18 @@ version: '3.7'
 services:
   app:
     image: nginx
+    networks:
+      - traefik_proxy
+      - default
     volumes:
-      - ../../.docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./.docker/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./src:/usr/share/nginx/html
-    deploy:
-      placement:
-        constraints:
-          - node.hostname == ${HOSTNAME}
-      labels:
-        - traefik.enable=true
-        - traefik.http.routers.imshop-202204__${PROJECT_NAME}.entrypoints=websecure
-        - traefik.http.routers.imshop-202204__${PROJECT_NAME}.rule=Host(`${DOMAIN}`)
-        - traefik.http.routers.imshop-202204__${PROJECT_NAME}.tls.certresolver=leresolver
-        - traefik.http.services.imshop-202204__${PROJECT_NAME}.loadbalancer.server.port=80
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.imshop-202204__${PROJECT_NAME}.entrypoints=websecure
+      - traefik.http.routers.imshop-202204__${PROJECT_NAME}.rule=Host(`${DOMAIN}`)
+      - traefik.http.routers.imshop-202204__${PROJECT_NAME}.tls.certresolver=leresolver
+      - traefik.http.services.imshop-202204__${PROJECT_NAME}.loadbalancer.server.port=80
   traefik-forward-auth:
     image: thomseddon/traefik-forward-auth:latest
     security_opt:
@@ -36,6 +35,5 @@ services:
         - traefik.http.services.traefik-forward-auth.loadbalancer.server.port=4181
 
 networks:
-  default:
-    external:
-      name: proxy-main
+  traefik_proxy:
+    external: true
